@@ -1,0 +1,9 @@
+{
+  "name": "ぶれた時に戻るメモ",
+  "short_name": "戻るメモ",
+  "display": "standalone",
+  "start_url": "./",
+  "scope": "./",
+  "theme_color": "#e8cfc8",
+  "background_color": "#fbf5f2"
+}
