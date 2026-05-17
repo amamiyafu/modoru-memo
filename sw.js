@@ -1,8 +1,9 @@
-const CACHE_NAME = "modoru-memo-cache-v1";
+const CACHE_NAME = "modoru-memo-cache-v3";
 const CACHE_FILES = [
   "./",
   "./index.html",
-  "./manifest.json"
+  "./manifest.json",
+  "./icon.png"
 ];
 
 self.addEventListener("install", (event) => {
