@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#e8cfc5">
+  <meta name="theme-color" content="#e8cfc8">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="戻るメモ">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="manifest" href="./manifest.json">
   <title>ぶれた時に戻るメモ</title>
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icon.png">
   <style>
     * {
       box-sizing: border-box;
@@ -18,26 +19,23 @@
     body,
     .app {
       width: 100%;
-      min-width: 0;
       max-width: 100%;
+      min-height: 100%;
       overflow-x: hidden;
     }
 
     html {
-      min-height: 100%;
-      background: #f8efeb;
+      background: #fbf5f2;
+      color: #4d3f3a;
+      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
       -webkit-text-size-adjust: 100%;
       text-size-adjust: 100%;
     }
 
     body {
-      min-height: 100%;
       margin: 0;
-      color: #4c3c37;
       background:
-        radial-gradient(circle at top left, rgba(255, 248, 242, 0.96), rgba(255, 248, 242, 0) 28rem),
-        linear-gradient(180deg, #f8efeb 0%, #f4e5df 54%, #faf3ef 100%);
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+        linear-gradient(180deg, #f8ece7 0%, #fbf5f2 42%, #fffaf7 100%);
       font-size: 16px;
       line-height: 1.8;
     }
@@ -55,21 +53,16 @@
     }
 
     button {
-      min-height: 52px;
       border: 0;
       cursor: pointer;
       touch-action: manipulation;
-    }
-
-    h1,
-    h2,
-    p {
-      margin: 0;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .app {
-      min-height: 100svh;
-      padding: max(18px, env(safe-area-inset-top)) 17px max(28px, env(safe-area-inset-bottom));
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: calc(22px + env(safe-area-inset-top)) 18px calc(34px + env(safe-area-inset-bottom));
     }
 
     .shell {
@@ -78,235 +71,217 @@
       margin: 0 auto;
     }
 
-    .hero {
-      padding: 12px 2px 20px;
+    .header {
+      padding: 10px 2px 18px;
     }
 
     h1 {
-      color: #5b413a;
-      font-size: 29px;
-      line-height: 1.36;
-      font-weight: 760;
+      margin: 0 0 16px;
+      color: #473832;
+      font-size: 27px;
+      line-height: 1.35;
+      font-weight: 700;
       letter-spacing: 0;
     }
 
     .lead {
-      margin-top: 16px;
-      color: #76615a;
+      margin: 0;
+      color: #75645e;
       font-size: 16px;
-      line-height: 2;
+      line-height: 1.95;
       white-space: pre-line;
     }
 
-    .composer,
-    .backup,
-    .empty,
-    .closing {
-      border: 1px solid rgba(174, 126, 112, 0.18);
-      background: rgba(255, 252, 249, 0.82);
-      box-shadow: 0 16px 34px rgba(118, 82, 70, 0.08);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-
     .composer {
-      padding: 15px;
+      margin-top: 20px;
+      padding: 18px;
+      background: rgba(255, 252, 249, 0.88);
+      border: 1px solid rgba(214, 184, 174, 0.55);
       border-radius: 24px;
+      box-shadow: 0 14px 34px rgba(106, 75, 65, 0.08);
     }
 
     textarea {
-      display: block;
-      height: 138px;
-      min-height: 118px;
-      max-height: 38svh;
-      padding: 16px 15px;
-      color: #4c3c37;
-      background: #fffaf7;
-      border: 1px solid #ead5cb;
-      line-height: 1.75;
+      min-height: 86px;
+      max-height: 24vh;
       resize: vertical;
+      padding: 16px;
+      color: #4a3c36;
+      background: #fffaf7;
+      border: 1px solid #dec7bf;
+      line-height: 1.8;
       outline: none;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
     }
 
     textarea::placeholder {
-      color: #aa8d84;
+      color: #a6958f;
     }
 
     textarea:focus {
-      border-color: #d7ab9c;
-      box-shadow: 0 0 0 4px rgba(216, 173, 157, 0.17);
+      border-color: #cfa89c;
+      box-shadow: 0 0 0 4px rgba(207, 168, 156, 0.18);
     }
 
-    .primary-button {
-      margin-top: 13px;
+    .save-button {
+      min-height: 52px;
+      margin-top: 14px;
       padding: 14px 18px;
       color: #fffaf7;
-      background: #a96f61;
-      font-weight: 720;
-      line-height: 1.4;
-      box-shadow: 0 10px 22px rgba(135, 83, 71, 0.19);
+      background: #b98479;
+      font-weight: 700;
+      line-height: 1.35;
+      box-shadow: 0 10px 22px rgba(153, 95, 83, 0.18);
     }
 
-    .primary-button:active {
+    .save-button:active {
       transform: translateY(1px);
-      background: #965d51;
+      background: #aa766c;
     }
 
     .status {
-      min-height: 28px;
-      padding-top: 9px;
-      color: #8a645a;
+      min-height: 26px;
+      margin-top: 10px;
+      color: #8f746c;
       font-size: 15px;
-      line-height: 1.5;
+      line-height: 1.7;
       text-align: center;
     }
 
-    .list-note {
-      margin: 18px 2px 9px;
-      color: #9b918e;
+    .list-section {
+      margin-top: 24px;
+    }
+
+    .swipe-note {
+      margin: 0 4px 12px;
+      color: #b1a19c;
       font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .notes {
-      display: grid;
-      gap: 12px;
-    }
-
-    .note-card {
-      position: relative;
-      overflow: hidden;
-      border-radius: 22px;
-      background: #b96b61;
-      touch-action: pan-y;
-    }
-
-    .note-delete {
-      position: absolute;
-      top: 0;
-      right: 0;
-      z-index: 1;
-      width: 90px;
-      height: 100%;
-      min-height: 100%;
-      border-radius: 0;
-      color: #fff;
-      background: #b75a50;
-      font-weight: 720;
-      line-height: 1.4;
-    }
-
-    .note-body {
-      position: relative;
-      z-index: 2;
-      min-height: 84px;
-      padding: 18px 17px;
-      color: #4d3b36;
-      background: rgba(255, 253, 250, 0.96);
-      border: 1px solid rgba(174, 126, 112, 0.2);
-      border-radius: 22px;
-      font-size: 17px;
-      line-height: 2;
-      white-space: pre-wrap;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-      transform: translateX(0);
-      transition: transform 180ms ease;
-      box-shadow: 0 12px 26px rgba(118, 82, 70, 0.08);
-    }
-
-    .note-card.is-open .note-body {
-      transform: translateX(-90px);
+      line-height: 1.6;
     }
 
     .empty {
-      margin-top: 18px;
+      margin: 0;
       padding: 24px 18px;
+      color: #806d67;
+      background: rgba(255, 252, 249, 0.72);
+      border: 1px solid rgba(219, 193, 184, 0.58);
       border-radius: 22px;
-      color: #806961;
-      font-size: 16px;
-      line-height: 1.95;
-      text-align: center;
+      line-height: 1.9;
       white-space: pre-line;
     }
 
-    .backup {
-      margin-top: 26px;
-      padding: 18px 16px;
-      border-radius: 24px;
+    .memo-list {
+      display: grid;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
 
-    h2 {
-      color: #5b413a;
-      font-size: 20px;
+    .memo-row {
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px;
+      background: #c67870;
+    }
+
+    .delete-button {
+      position: absolute;
+      inset: 0 0 0 auto;
+      width: 92px;
+      min-height: 100%;
+      padding: 0 14px;
+      color: #fff;
+      background: #c67870;
+      border-radius: 0;
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .memo-card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      min-height: 72px;
+      padding: 18px 18px 19px;
+      color: #4a3d38;
+      background: rgba(255, 252, 249, 0.96);
+      border: 1px solid rgba(218, 194, 186, 0.68);
+      border-radius: 22px;
+      box-shadow: 0 12px 28px rgba(104, 76, 69, 0.08);
+      font-size: 17px;
+      line-height: 1.9;
+      white-space: pre-wrap;
+      word-break: break-word;
+      transition: transform 180ms ease;
+      touch-action: pan-y;
+    }
+
+    .memo-row.is-open .memo-card {
+      transform: translateX(-92px);
+    }
+
+    .backup {
+      margin-top: 14px;
+      padding: 14px;
+      background: rgba(255, 250, 247, 0.58);
+      border: 1px solid rgba(218, 194, 186, 0.42);
+      border-radius: 18px;
+    }
+
+    .backup h2 {
+      margin: 0 0 6px;
+      color: #665650;
+      font-size: 16px;
       line-height: 1.45;
-      font-weight: 750;
       letter-spacing: 0;
     }
 
     .backup p {
+      margin: 0 0 10px;
+      color: #95847e;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .backup-button {
+      min-height: 46px;
       margin-top: 10px;
-      color: #7a625a;
-      font-size: 15px;
-      line-height: 1.85;
+      padding: 11px 14px;
+      color: #fffaf7;
+      background: #b59a91;
+      font-weight: 700;
+      line-height: 1.35;
+      box-shadow: 0 8px 16px rgba(107, 82, 73, 0.09);
     }
 
-    .backup-actions {
-      display: grid;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .secondary-button {
-      padding: 13px 16px;
-      color: #694c44;
-      background: #fff8f4;
-      border: 1px solid #ead3c9;
-      font-weight: 720;
-      line-height: 1.4;
-    }
-
-    .secondary-button:active {
+    .backup-button:active {
       transform: translateY(1px);
-      background: #f8e9e2;
+      background: #a98d84;
+    }
+
+    .backup-button.secondary {
+      color: #7c675f;
+      background: #f4e8e3;
+      box-shadow: none;
     }
 
     .file-input {
       position: absolute;
       width: 1px;
       height: 1px;
-      opacity: 0;
-      pointer-events: none;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+      padding: 0;
     }
 
-    .closing {
-      margin-top: 24px;
-      padding: 20px 17px;
-      border-radius: 22px;
-      color: #7c625b;
-      font-size: 14px;
-      line-height: 2;
-      text-align: center;
-      white-space: pre-line;
-    }
-
-    [hidden] {
-      display: none !important;
-    }
-
-    @media (min-width: 520px) {
+    @media (min-width: 620px) {
       .app {
         padding-right: 24px;
         padding-left: 24px;
-      }
-
-      h1 {
-        font-size: 34px;
-      }
-
-      .backup-actions {
-        grid-template-columns: 1fr 1fr;
       }
     }
   </style>
@@ -314,7 +289,7 @@
 <body>
   <main class="app">
     <div class="shell">
-      <header class="hero">
+      <header class="header">
         <h1>ぶれた時に戻るメモ</h1>
         <p class="lead">しんどい時の自分に、
 自分の軸を思い出してもらえるように。
@@ -324,294 +299,279 @@
       </header>
 
       <section class="composer" aria-label="メモを書く">
-        <textarea id="memoInput" placeholder="今の自分が、未来の自分に残したい言葉を書く" aria-label="未来の自分に残したい言葉"></textarea>
-        <button class="primary-button" id="saveButton" type="button">保存する</button>
+        <textarea id="memoInput" placeholder="今の自分が、未来の自分に残したい言葉を書く" rows="3"></textarea>
+        <button class="save-button" id="saveButton" type="button">保存する</button>
         <div class="status" id="status" role="status" aria-live="polite"></div>
       </section>
-
-      <p class="list-note" id="listNote">スライドすると削除できます</p>
-      <section class="notes" id="notes" aria-label="保存したメモ"></section>
-      <div class="empty" id="empty">まだメモはありません。
-書けるときに、ひとつだけ残せば大丈夫です。</div>
 
       <section class="backup" aria-label="バックアップ">
         <h2>バックアップ</h2>
         <p>大切な言葉がなくならないように、定期的なバックアップをお願いします。</p>
-        <div class="backup-actions">
-          <button class="secondary-button" id="exportButton" type="button">バックアップを書き出す</button>
-          <button class="secondary-button" id="importButton" type="button">バックアップを読み込む</button>
-        </div>
-        <input class="file-input" id="importFile" type="file" accept="application/json,.json" aria-label="バックアップファイルを選択">
+        <button class="backup-button" id="exportButton" type="button">バックアップを書き出す</button>
+        <button class="backup-button secondary" id="importButton" type="button">バックアップを読み込む</button>
+        <input class="file-input" id="importFile" type="file" accept="application/json,.json">
       </section>
 
-      <p class="closing">迷っている今のわたしも、
-ここに書いたわたしも、
-どちらも本当です。
-
-だから、責めなくていい。
-何度でも、戻ってきて大丈夫です。</p>
+      <section class="list-section" aria-label="保存したメモ">
+        <p class="swipe-note">スライドすると削除できます</p>
+        <div id="memoArea"></div>
+      </section>
     </div>
   </main>
 
   <script>
-    (function () {
-      "use strict";
+    const STORAGE_KEY = "bureta_toki_ni_modoru_memo_v1";
+    const memoInput = document.getElementById("memoInput");
+    const saveButton = document.getElementById("saveButton");
+    const status = document.getElementById("status");
+    const memoArea = document.getElementById("memoArea");
+    const exportButton = document.getElementById("exportButton");
+    const importButton = document.getElementById("importButton");
+    const importFile = document.getElementById("importFile");
+    let statusTimer = null;
 
-      var STORAGE_KEY = "bureta_toki_ni_modoru_memo_notes_v1";
-      var notes = [];
-      var statusTimer = null;
-
-      var memoInput = document.getElementById("memoInput");
-      var saveButton = document.getElementById("saveButton");
-      var notesList = document.getElementById("notes");
-      var empty = document.getElementById("empty");
-      var listNote = document.getElementById("listNote");
-      var status = document.getElementById("status");
-      var exportButton = document.getElementById("exportButton");
-      var importButton = document.getElementById("importButton");
-      var importFile = document.getElementById("importFile");
-
-      function readNotes() {
-        try {
-          var raw = localStorage.getItem(STORAGE_KEY);
-          var parsed = raw ? JSON.parse(raw) : [];
-          if (!Array.isArray(parsed)) {
-            return [];
-          }
-
-          return parsed
-            .filter(function (item) {
-              return item && typeof item.text === "string" && item.text.trim();
-            })
-            .map(function (item) {
-              return {
-                id: typeof item.id === "string" ? item.id : String(Date.now() + Math.random()),
-                text: item.text
-              };
-            });
-        } catch (error) {
+    function loadMemos() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
           return [];
         }
-      }
-
-      function saveNotes() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
-      }
-
-      function normalizeMemoText(value) {
-        var text = value.trim();
-        if (!text) {
-          return "";
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) {
+          return [];
         }
-        return text.indexOf("・") === 0 ? text : "・" + text;
+        return parsed.filter((memo) => typeof memo === "string");
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function saveMemos(memos) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(memos));
+    }
+
+    function normalizeMemo(text) {
+      const trimmed = text.trim();
+      if (!trimmed) {
+        return "";
+      }
+      return trimmed.startsWith("・") ? trimmed : "・" + trimmed;
+    }
+
+    function showStatus(message) {
+      status.textContent = message;
+      window.clearTimeout(statusTimer);
+      statusTimer = window.setTimeout(() => {
+        status.textContent = "";
+      }, 1800);
+    }
+
+    function closeAllRows() {
+      document.querySelectorAll(".memo-row.is-open").forEach((row) => {
+        row.classList.remove("is-open");
+      });
+    }
+
+    function renderMemos() {
+      const memos = loadMemos();
+      memoArea.textContent = "";
+
+      if (memos.length === 0) {
+        const empty = document.createElement("p");
+        empty.className = "empty";
+        empty.textContent = "まだメモはありません。";
+        memoArea.appendChild(empty);
+        return;
       }
 
-      function showStatus(message) {
-        status.textContent = message;
-        if (statusTimer) {
-          clearTimeout(statusTimer);
-        }
-        statusTimer = setTimeout(function () {
-          status.textContent = "";
-        }, 2200);
-      }
+      const list = document.createElement("ul");
+      list.className = "memo-list";
 
-      function closeOpenCards(exceptCard) {
-        var openCards = notesList.querySelectorAll(".note-card.is-open");
-        openCards.forEach(function (card) {
-          if (card !== exceptCard) {
-            card.classList.remove("is-open");
-          }
-        });
-      }
+      memos.forEach((memo, index) => {
+        const row = document.createElement("li");
+        row.className = "memo-row";
 
-      function makeNoteCard(note) {
-        var card = document.createElement("article");
-        card.className = "note-card";
-
-        var deleteButton = document.createElement("button");
-        deleteButton.className = "note-delete";
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-button";
         deleteButton.type = "button";
         deleteButton.textContent = "削除";
-        deleteButton.setAttribute("aria-label", "このメモを削除");
+        deleteButton.addEventListener("click", () => deleteMemo(index));
 
-        var body = document.createElement("div");
-        body.className = "note-body";
-        body.textContent = note.text;
+        const card = document.createElement("div");
+        card.className = "memo-card";
+        card.textContent = memo;
 
-        var startX = 0;
-        var startY = 0;
-        var tracking = false;
+        addSwipeBehavior(row, card);
+        row.appendChild(deleteButton);
+        row.appendChild(card);
+        list.appendChild(row);
+      });
 
-        body.addEventListener("touchstart", function (event) {
-          if (!event.touches || event.touches.length !== 1) {
-            return;
-          }
-          startX = event.touches[0].clientX;
-          startY = event.touches[0].clientY;
-          tracking = true;
-        }, { passive: true });
+      memoArea.appendChild(list);
+    }
 
-        body.addEventListener("touchmove", function (event) {
-          if (!tracking || !event.touches || event.touches.length !== 1) {
-            return;
-          }
-          var diffX = event.touches[0].clientX - startX;
-          var diffY = event.touches[0].clientY - startY;
-          if (Math.abs(diffY) > Math.abs(diffX)) {
-            return;
-          }
-          if (diffX < -32) {
-            closeOpenCards(card);
-            card.classList.add("is-open");
-          }
-          if (diffX > 32) {
-            card.classList.remove("is-open");
-          }
-        }, { passive: true });
+    function addSwipeBehavior(row, card) {
+      let startX = 0;
+      let startY = 0;
+      let currentX = 0;
+      let dragging = false;
+      let suppressClick = false;
 
-        body.addEventListener("touchend", function () {
-          tracking = false;
-        }, { passive: true });
+      card.addEventListener("pointerdown", (event) => {
+        startX = event.clientX;
+        startY = event.clientY;
+        currentX = 0;
+        dragging = true;
+      });
 
-        body.addEventListener("click", function () {
-          if (card.classList.contains("is-open")) {
-            card.classList.remove("is-open");
-          }
-        });
-
-        deleteButton.addEventListener("click", function () {
-          if (!confirm("このメモを削除しますか？")) {
-            return;
-          }
-          notes = notes.filter(function (item) {
-            return item.id !== note.id;
-          });
-          saveNotes();
-          renderNotes();
-          showStatus("削除しました");
-        });
-
-        card.appendChild(deleteButton);
-        card.appendChild(body);
-        return card;
-      }
-
-      function renderNotes() {
-        notesList.textContent = "";
-        empty.hidden = notes.length > 0;
-        listNote.hidden = notes.length === 0;
-        notes.forEach(function (note) {
-          notesList.appendChild(makeNoteCard(note));
-        });
-      }
-
-      function addNote() {
-        var text = normalizeMemoText(memoInput.value);
-        if (!text) {
-          return;
-        }
-        notes.unshift({
-          id: String(Date.now()) + "-" + Math.random().toString(36).slice(2),
-          text: text
-        });
-        saveNotes();
-        memoInput.value = "";
-        renderNotes();
-        showStatus("保存しました");
-      }
-
-      function exportBackup() {
-        var backup = {
-          app: "ぶれた時に戻るメモ",
-          storageKey: STORAGE_KEY,
-          exportedAt: new Date().toISOString(),
-          notes: notes
-        };
-        var blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
-        var url = URL.createObjectURL(blob);
-        var link = document.createElement("a");
-        var date = new Date().toISOString().slice(0, 10);
-        link.href = url;
-        link.download = "modoru-memo-backup-" + date + ".json";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
-        showStatus("バックアップを書き出しました");
-      }
-
-      function normalizeImportedNotes(parsed) {
-        var imported = Array.isArray(parsed) ? parsed : parsed && parsed.notes;
-        if (!Array.isArray(imported)) {
-          return null;
-        }
-        return imported
-          .filter(function (item) {
-            return item && typeof item.text === "string" && item.text.trim();
-          })
-          .map(function (item) {
-            return {
-              id: typeof item.id === "string" ? item.id : String(Date.now() + Math.random()),
-              text: normalizeMemoText(item.text)
-            };
-          });
-      }
-
-      function importBackup(file) {
-        if (!file) {
+      card.addEventListener("pointermove", (event) => {
+        if (!dragging) {
           return;
         }
 
-        var reader = new FileReader();
-        reader.onload = function () {
-          try {
-            var parsed = JSON.parse(String(reader.result || ""));
-            var importedNotes = normalizeImportedNotes(parsed);
-            if (!importedNotes) {
-              alert("読み込めるバックアップではありません。");
-              return;
-            }
-            if (!confirm("今のメモをバックアップの内容で復元しますか？")) {
-              return;
-            }
-            notes = importedNotes;
-            saveNotes();
-            renderNotes();
-            showStatus("復元しました");
-          } catch (error) {
-            alert("バックアップを読み込めませんでした。");
-          } finally {
-            importFile.value = "";
-          }
-        };
-        reader.readAsText(file);
-      }
+        const diffX = event.clientX - startX;
+        const diffY = event.clientY - startY;
 
-      saveButton.addEventListener("click", addNote);
-      exportButton.addEventListener("click", exportBackup);
-      importButton.addEventListener("click", function () {
-        importFile.click();
-      });
-      importFile.addEventListener("change", function () {
-        importBackup(importFile.files && importFile.files[0]);
-      });
+        if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 12) {
+          dragging = false;
+          card.style.transform = "";
+          return;
+        }
 
-      document.addEventListener("click", function (event) {
-        if (!event.target.closest(".note-card")) {
-          closeOpenCards(null);
+        if (diffX < 0) {
+          currentX = Math.max(diffX, -92);
+          card.style.transform = "translateX(" + currentX + "px)";
         }
       });
 
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", function () {
-          navigator.serviceWorker.register("./sw.js");
-        });
+      card.addEventListener("pointerup", () => {
+        if (!dragging) {
+          return;
+        }
+        dragging = false;
+        card.style.transform = "";
+        if (currentX < -42) {
+          closeAllRows();
+          row.classList.add("is-open");
+          suppressClick = true;
+        } else {
+          row.classList.remove("is-open");
+        }
+      });
+
+      card.addEventListener("pointercancel", () => {
+        dragging = false;
+        card.style.transform = "";
+      });
+
+      card.addEventListener("click", () => {
+        if (suppressClick) {
+          suppressClick = false;
+          return;
+        }
+        if (row.classList.contains("is-open")) {
+          row.classList.remove("is-open");
+        }
+      });
+    }
+
+    function addMemo() {
+      const memo = normalizeMemo(memoInput.value);
+      if (!memo) {
+        return;
       }
 
-      notes = readNotes();
-      renderNotes();
-    }());
+      const memos = loadMemos();
+      memos.unshift(memo);
+      saveMemos(memos);
+      memoInput.value = "";
+      renderMemos();
+      showStatus("保存しました");
+    }
+
+    function deleteMemo(index) {
+      if (!window.confirm("このメモを削除しますか？")) {
+        closeAllRows();
+        return;
+      }
+
+      const memos = loadMemos();
+      memos.splice(index, 1);
+      saveMemos(memos);
+      renderMemos();
+    }
+
+    function exportBackup() {
+      const data = {
+        app: "ぶれた時に戻るメモ",
+        storageKey: STORAGE_KEY,
+        version: 1,
+        exportedAt: new Date().toISOString(),
+        memos: loadMemos()
+      };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      const date = new Date().toISOString().slice(0, 10);
+      link.href = url;
+      link.download = "modoru-memo-backup-" + date + ".json";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function importBackup(file) {
+      const reader = new FileReader();
+      reader.addEventListener("load", () => {
+        try {
+          const parsed = JSON.parse(String(reader.result));
+          const memos = Array.isArray(parsed) ? parsed : parsed.memos;
+
+          if (!Array.isArray(memos) || !memos.every((memo) => typeof memo === "string")) {
+            window.alert("読み込めるバックアップファイルではありません。");
+            return;
+          }
+
+          if (!window.confirm("今のメモを、読み込んだバックアップの内容に置き換えますか？")) {
+            return;
+          }
+
+          saveMemos(memos);
+          renderMemos();
+          showStatus("復元しました");
+        } catch (error) {
+          window.alert("バックアップを読み込めませんでした。");
+        } finally {
+          importFile.value = "";
+        }
+      });
+      reader.readAsText(file);
+    }
+
+    saveButton.addEventListener("click", addMemo);
+    exportButton.addEventListener("click", exportBackup);
+    importButton.addEventListener("click", () => importFile.click());
+    importFile.addEventListener("change", () => {
+      const file = importFile.files && importFile.files[0];
+      if (file) {
+        importBackup(file);
+      }
+    });
+
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".memo-row")) {
+        closeAllRows();
+      }
+    });
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("./sw.js").catch(() => {});
+      });
+    }
+
+    renderMemos();
   </script>
 </body>
 </html>
