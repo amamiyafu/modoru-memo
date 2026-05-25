@@ -260,13 +260,23 @@
       justify-content: center;
       width: 100%;
       max-width: 100%;
+      height: 46px;
       min-height: 46px;
       margin-top: 10px;
       padding: 11px 14px;
       color: #fffaf7;
       background: #b59a91;
+      border: 0;
+      border-radius: 18px;
+      font-size: 16px;
       font-weight: 700;
       line-height: 1.35;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      -webkit-appearance: none;
+      appearance: none;
+      -webkit-tap-highlight-color: transparent;
       box-shadow: 0 8px 16px rgba(107, 82, 73, 0.09);
     }
 
@@ -284,12 +294,15 @@
     .file-input {
       position: absolute;
       width: 1px;
+      max-width: 1px;
       height: 1px;
       overflow: hidden;
       clip: rect(0, 0, 0, 0);
       white-space: nowrap;
       border: 0;
       padding: 0;
+      -webkit-appearance: none;
+      appearance: none;
     }
 
     @media (min-width: 620px) {
@@ -320,7 +333,7 @@
 
       <section class="backup" aria-label="バックアップ">
         <h2>バックアップ</h2>
-        <p>記録を保存したり復元できます。</p>
+        <p>記録を保存したり復元できます。<br>大切な記録がなくならないように、定期的に保存をお願いします。</p>
         <button class="backup-button" id="backupSaveButton" type="button">保存</button>
         <label class="backup-button" for="importFile">復元</label>
         <input class="file-input" id="importFile" type="file" accept="application/json,.json">
