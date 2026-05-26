@@ -1,9 +1,9 @@
-const CACHE_NAME = "prn-dose-count-memo-v11";
+﻿const CACHE_NAME = "modoru-memo-app-cache-v9";
 const CACHE_FILES = [
+  "./",
   "./index.html",
   "./manifest.json",
-  "./icon.png",
-  "./sw.js"
+  "./icon.png"
 ];
 
 self.addEventListener("install", (event) => {
@@ -15,13 +15,13 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((cacheName) => cacheName !== CACHE_NAME)
-          .map((cacheName) => caches.delete(cacheName))
-      );
-    }).then(() => self.clients.claim())
+    caches.keys()
+      .then((keys) => Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
+      ))
+      .then(() => self.clients.claim())
   );
 });
 
@@ -30,13 +30,28 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  const request = event.request;
+  const isPageRequest = request.mode === "navigate" || request.destination === "document";
+
+  if (isPageRequest) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          const copy = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          return response;
+        })
+        .catch(() => caches.match(request).then((cached) => cached || caches.match("./index.html")))
+    );
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request).catch(() => {
-        if (event.request.mode === "navigate") {
-          return caches.match("./index.html");
-        }
-        return undefined;
+    caches.match(request).then((cached) => {
+      return cached || fetch(request).then((response) => {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+        return response;
       });
     })
   );
