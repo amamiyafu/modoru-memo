@@ -1,9 +1,9 @@
-﻿const CACHE_NAME = "modoru-memo-app-cache-v8";
+const CACHE_NAME = "prn-dose-count-memo-v11";
 const CACHE_FILES = [
-  "./",
   "./index.html",
   "./manifest.json",
-  "./icon.png"
+  "./icon.png",
+  "./sw.js"
 ];
 
 self.addEventListener("install", (event) => {
@@ -15,15 +15,14 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((key) => key !== CACHE_NAME)
-          .map((key) => caches.delete(key))
-      )
-    )
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter((cacheName) => cacheName !== CACHE_NAME)
+          .map((cacheName) => caches.delete(cacheName))
+      );
+    }).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
@@ -32,8 +31,13 @@ self.addEventListener("fetch", (event) => {
   }
 
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      return cached || fetch(event.request);
+    caches.match(event.request).then((cachedResponse) => {
+      return cachedResponse || fetch(event.request).catch(() => {
+        if (event.request.mode === "navigate") {
+          return caches.match("./index.html");
+        }
+        return undefined;
+      });
     })
   );
 });

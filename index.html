@@ -1,603 +1,996 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="ja">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#e8cfc8">
+  <meta name="theme-color" content="#D8B3AA">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="戻るメモ">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <title>ぶれた時に戻るメモ</title>
+  <meta name="apple-mobile-web-app-title" content="頓服メモ">
   <link rel="manifest" href="./manifest.json">
   <link rel="apple-touch-icon" href="./icon.png">
+  <title>頓服メモ</title>
   <style>
+    :root {
+      --bg: #FFF8F3;
+      --surface: #ffffff;
+      --surface-soft: #FFF4EC;
+      --text: #332B2B;
+      --muted: #7A6A66;
+      --line: #EAD8D1;
+      --primary: #CFA79D;
+      --primary-dark: #9B6F66;
+      --primary-soft: #F6E4DC;
+      --accent: #6D9B8F;
+      --accent-soft: #F6E4DC;
+      --danger: #8F6A64;
+      --shadow: 0 14px 34px rgba(92, 67, 58, 0.08);
+      --radius: 20px;
+    }
+
     * {
       box-sizing: border-box;
     }
 
     html,
-    body,
-    .app {
+    body {
       width: 100%;
       max-width: 100%;
       min-height: 100%;
+      margin: 0;
       overflow-x: hidden;
-    }
-
-    html {
-      background: #fbf5f2;
-      color: #4d3f3a;
+      background: var(--bg);
+      color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
-      -webkit-text-size-adjust: 100%;
-      text-size-adjust: 100%;
+      line-height: 1.65;
     }
 
     body {
-      margin: 0;
-      background:
-        linear-gradient(180deg, #f8ece7 0%, #fbf5f2 42%, #fffaf7 100%);
-      font-size: 16px;
-      line-height: 1.8;
+      padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
     }
 
     button,
-    textarea,
-    input {
-      width: 100%;
-      max-width: 100%;
+    input,
+    textarea {
       font: inherit;
-      font-size: 16px;
-      -webkit-appearance: none;
-      appearance: none;
-      border-radius: 18px;
     }
 
     button {
       border: 0;
       cursor: pointer;
       touch-action: manipulation;
-      -webkit-tap-highlight-color: transparent;
     }
 
     .app {
-      min-height: 100vh;
-      min-height: 100dvh;
-      padding: calc(22px + env(safe-area-inset-top)) 18px calc(34px + env(safe-area-inset-bottom));
-    }
-
-    .shell {
       width: 100%;
-      max-width: 560px;
+      max-width: 720px;
+      min-height: 100vh;
       margin: 0 auto;
+      padding: 20px 16px 36px;
     }
 
-    .header {
-      padding: 10px 2px 18px;
+    .hero {
+      padding: 8px 2px 18px;
+    }
+
+    .title-block {
+      width: 100%;
+      max-width: 100%;
       text-align: center;
     }
 
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
     h1 {
-      max-width: 19rem;
-      margin: 0 auto 16px;
-      color: #473832;
-      font-size: 27px;
-      line-height: 1.35;
-      font-weight: 700;
+      margin-bottom: 12px;
+      font-size: clamp(28px, 8vw, 42px);
+      line-height: 1.18;
       letter-spacing: 0;
     }
 
     .lead {
-      max-width: 28rem;
+      max-width: 420px;
       margin: 0 auto;
-      color: #75645e;
-      font-size: 16px;
-      line-height: 2.08;
-      text-align: center;
-      white-space: pre-line;
-    }
-
-    .composer {
-      margin-top: 20px;
-      padding: 18px;
-      background: rgba(255, 252, 249, 0.88);
-      border: 1px solid rgba(214, 184, 174, 0.55);
-      border-radius: 24px;
-      box-shadow: 0 14px 34px rgba(106, 75, 65, 0.08);
-    }
-
-    textarea {
-      min-height: 86px;
-      max-height: 24vh;
-      resize: vertical;
-      padding: 16px;
-      color: #4a3c36;
-      background: #fffaf7;
-      border: 1px solid #dec7bf;
-      line-height: 1.8;
-      outline: none;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    }
-
-    textarea::placeholder {
-      color: #a6958f;
-    }
-
-    textarea:focus {
-      border-color: #cfa89c;
-      box-shadow: 0 0 0 4px rgba(207, 168, 156, 0.18);
-    }
-
-    .save-button {
-      min-height: 52px;
-      margin-top: 14px;
-      padding: 14px 18px;
-      color: #fffaf7;
-      background: #b98479;
-      font-weight: 700;
-      line-height: 1.35;
-      box-shadow: 0 10px 22px rgba(153, 95, 83, 0.18);
-    }
-
-    .save-button:active {
-      transform: translateY(1px);
-      background: #aa766c;
-    }
-
-    .status {
-      min-height: 26px;
-      margin-top: 10px;
-      color: #8f746c;
+      color: var(--muted);
       font-size: 15px;
-      line-height: 1.7;
-      text-align: center;
     }
 
-    .list-section {
-      margin-top: 24px;
-    }
-
-    .swipe-note {
-      margin: 0 4px 12px;
-      color: #b1a19c;
-      font-size: 13px;
-      line-height: 1.6;
-    }
-
-    .empty {
-      max-width: 30rem;
-      margin: 0 auto;
-      padding: 24px 18px;
-      color: #806d67;
-      background: rgba(255, 252, 249, 0.72);
-      border: 1px solid rgba(219, 193, 184, 0.58);
-      border-radius: 22px;
-      line-height: 2;
-      text-align: center;
-    }
-
-    .memo-list {
-      display: grid;
-      gap: 14px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .memo-row {
-      position: relative;
-      overflow: hidden;
-      border-radius: 22px;
-      background: #c67870;
-    }
-
-    .delete-button {
-      position: absolute;
-      inset: 0 0 0 auto;
-      width: 92px;
-      min-height: 100%;
-      padding: 0 14px;
-      color: #fff;
-      background: #c67870;
-      border-radius: 0;
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 1.4;
-    }
-
-    .memo-card {
-      position: relative;
-      z-index: 1;
+    .card {
       width: 100%;
-      min-height: 72px;
-      padding: 18px 18px 19px;
-      color: #4a3d38;
-      background: rgba(255, 252, 249, 0.96);
-      border: 1px solid rgba(218, 194, 186, 0.68);
-      border-radius: 22px;
-      box-shadow: 0 12px 28px rgba(104, 76, 69, 0.08);
-      font-size: 17px;
-      line-height: 1.9;
-      white-space: pre-wrap;
-      word-break: break-word;
-      transition: transform 180ms ease;
-      touch-action: pan-y;
+      max-width: 100%;
+      margin: 0 0 16px;
+      padding: 18px;
+      border: 1px solid rgba(234, 217, 210, 0.9);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: var(--shadow);
     }
 
-    .memo-row.is-open .memo-card {
-      transform: translateX(-92px);
-    }
-
-    .backup {
-      margin-top: 14px;
-      padding: 14px;
-      background: rgba(255, 250, 247, 0.58);
-      border: 1px solid rgba(218, 194, 186, 0.42);
-      border-radius: 18px;
-      text-align: center;
-    }
-
-    .backup h2 {
-      max-width: 18rem;
-      margin: 0 auto 6px;
-      color: #665650;
-      font-size: 16px;
-      line-height: 1.45;
+    .card h2 {
+      margin-bottom: 12px;
+      font-size: 19px;
+      line-height: 1.35;
       letter-spacing: 0;
     }
 
-    .backup p {
-      max-width: 25rem;
-      margin: 0 auto 10px;
-      color: #95847e;
+    .form-grid {
+      display: grid;
+      gap: 16px;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .field {
+      min-width: 0;
+    }
+
+    .field label,
+    .fieldset-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text);
       font-size: 14px;
-      line-height: 1.85;
-      text-align: center;
+      font-weight: 700;
+    }
+
+    .input-wrap {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    input[type="date"],
+    input[type="time"],
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #fffdfb;
+      color: var(--text);
+      box-sizing: border-box;
+      display: block;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    input[type="date"],
+    input[type="time"],
+    select {
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 52px;
+      height: 52px;
+      padding: 12px 14px;
+      text-align: left;
+      line-height: normal;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%237A6A66' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round' d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+      background-position: calc(100% - 16px) center;
+      background-size: 12px 8px;
+      background-repeat: no-repeat;
+      padding-right: 38px;
+    }
+
+    input[type="text"] {
+      min-height: 52px;
+      padding: 12px 14px;
+    }
+
+    textarea {
+      min-height: 112px;
+      padding: 12px 14px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(207, 167, 157, 0.18);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 12px;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .chip-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .chip {
+      min-height: 40px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fffdfb;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .chip[aria-pressed="true"] {
+      border-color: #DFC7BF;
+      background: var(--accent-soft);
+      color: #5A3F3A;
+      font-weight: 700;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 2px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      max-width: 100%;
+      padding: 12px 18px;
+      border-radius: 14px;
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 800;
+      line-height: 1.2;
+      box-shadow: 0 10px 22px rgba(159, 118, 108, 0.16);
+    }
+
+    .button:active {
+      transform: translateY(1px);
+    }
+
+    .button.secondary {
+      border: 1px solid var(--line);
+      background: #fffdfb;
+      color: var(--primary-dark);
+      box-shadow: none;
+    }
+
+    .button.danger {
+      background: #FFF8F3;
+      color: var(--danger);
+      box-shadow: none;
+      border: 1px solid #EAD8D1;
+    }
+
+    .message {
+      min-height: 24px;
+      margin: 10px 0 0;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .backup-card {
+      background: #FFFDFB;
+    }
+
+    .backup-card p {
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .backup-actions {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
-      margin-top: 12px;
-    }
-
-    .backup-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
       width: 100%;
       max-width: 100%;
-      height: 46px;
-      min-height: 46px;
-      margin: 0;
-      padding: 11px 14px;
-      color: #fffaf7;
-      background: #b59a91;
-      border: 0;
-      border-radius: 999px;
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 1.35;
-      text-align: center;
-      text-decoration: none;
+    }
+
+    .backup-actions .button {
+      width: 100%;
+      min-width: 0;
+    }
+
+    .file-label {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .file-label input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
       cursor: pointer;
-      -webkit-appearance: none;
-      appearance: none;
-      -webkit-tap-highlight-color: transparent;
-      box-shadow: 0 8px 16px rgba(107, 82, 73, 0.09);
     }
 
-    .backup-button:active {
-      transform: translateY(1px);
-      background: #a98d84;
+    .section-title {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 22px 2px 12px;
     }
 
-    .backup-button.secondary {
-      color: #7c675f;
-      background: #f4e8e3;
-      box-shadow: none;
+    .section-title h2 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.35;
     }
 
-    .file-input {
-      display: none;
+    .record-day {
+      padding: 0;
+      overflow: hidden;
     }
 
-    @media (min-width: 620px) {
+    .day-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      background: #fffdfb;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .day-date {
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .day-count {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .record-list {
+      display: grid;
+      gap: 0;
+    }
+
+    .record-item {
+      padding: 15px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .record-item:last-child {
+      border-bottom: 0;
+    }
+
+    .record-main {
+      display: grid;
+      grid-template-columns: 58px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+    }
+
+    .record-time {
+      color: var(--text);
+      font-size: 17px;
+      font-weight: 900;
+      line-height: 1.4;
+      white-space: nowrap;
+    }
+
+    .record-detail {
+      min-width: 0;
+    }
+
+    .record-summary {
+      overflow-wrap: anywhere;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .record-dose-med,
+    .record-note {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 14px;
+      overflow-wrap: anywhere;
+    }
+
+    .record-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+      padding-left: 68px;
+    }
+
+    .small-button {
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: #fffdfb;
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .empty {
+      margin: 0;
+      padding: 22px 4px 28px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    @media (max-width: 440px) {
       .app {
-        padding-right: 24px;
-        padding-left: 24px;
+        padding: 18px 12px 30px;
+      }
+
+      .card {
+        padding: 16px;
+        border-radius: 18px;
+      }
+
+      .two-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .actions .button,
+      .file-label {
+        width: 100%;
+      }
+
+      .record-main {
+        grid-template-columns: 52px minmax(0, 1fr);
+      }
+
+      .record-actions {
+        padding-left: 62px;
       }
     }
   </style>
 </head>
 <body>
-  <main class="app">
-    <div class="shell">
-      <header class="header">
-        <h1>ぶれた時に戻るメモ</h1>
-        <p class="lead">しんどい時の自分に、
-自分の軸を思い出してもらえるように。
+  <main class="app" id="app">
+    <section class="hero" aria-labelledby="app-title">
+      <div class="title-block">
+        <h1 id="app-title">頓服メモ</h1>
+        <p class="lead">
+          頓服を飲んだ時間や、そのときの状況・気持ちを記録するメモです。
+        </p>
+      </div>
+    </section>
 
-書けるときに、書きたいことだけ残してください。
-迷った日は、読むだけでも大丈夫です。</p>
-      </header>
-
-      <section class="composer" aria-label="メモを書く">
-        <textarea id="memoInput" placeholder="今の自分が、未来の自分に残したい言葉を書く" rows="3"></textarea>
-        <button class="save-button" id="saveButton" type="button">保存する</button>
-        <div class="status" id="status" role="status" aria-live="polite"></div>
-      </section>
-
-      <section class="backup" aria-label="バックアップ">
-        <h2>バックアップ</h2>
-        <p>記録を保存したり復元できます。<br>大切な記録がなくならないように、定期的に保存をお願いします。</p>
-        <div class="backup-actions">
-          <button class="backup-button" id="backupSaveButton" type="button">保存</button>
-          <label class="backup-button restore-button" for="importFile">復元</label>
+    <section class="card" aria-labelledby="form-title">
+      <h2 id="form-title">記録する</h2>
+      <form id="recordForm" class="form-grid">
+        <div class="two-col">
+          <div class="field">
+            <label for="dateInput">日付</label>
+            <div class="input-wrap">
+              <input id="dateInput" name="date" type="date" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="timeInput">飲んだ時間</label>
+            <div class="input-wrap">
+              <input id="timeInput" name="time" type="time" required>
+            </div>
+          </div>
         </div>
-        <input class="file-input" id="importFile" type="file" accept="application/json,.json">
-      </section>
 
-      <section class="list-section" aria-label="保存したメモ">
-        <p class="swipe-note">スライドすると削除できます</p>
-        <div id="memoArea"></div>
-      </section>
+        <div class="field">
+          <label for="dosageCountSelect">何錠か（任意）</label>
+          <select id="dosageCountSelect" name="dosageCount">
+            <option value="">未選択</option>
+            <option value="0.5錠">0.5錠</option>
+            <option value="1錠">1錠</option>
+            <option value="1.5錠">1.5錠</option>
+            <option value="2錠">2錠</option>
+            <option value="2.5錠">2.5錠</option>
+            <option value="3錠">3錠</option>
+            <option value="3.5錠">3.5錠</option>
+            <option value="4錠">4錠</option>
+            <option value="4.5錠">4.5錠</option>
+            <option value="5錠">5錠</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="medicineInput">薬名（任意）</label>
+          <input id="medicineInput" name="medicine" type="text" placeholder="例：ロラゼパム、デパスなど" autocomplete="off">
+        </div>
+
+        <div class="field">
+          <span class="fieldset-label">どんなとき？</span>
+          <div class="chip-group" id="situationChips" aria-label="どんなとき"></div>
+        </div>
+
+        <div class="field">
+          <span class="fieldset-label">そのときの気持ち</span>
+          <div class="chip-group" id="feelingChips" aria-label="そのときの気持ち"></div>
+        </div>
+
+        <div class="field">
+          <label for="memoInput">メモ</label>
+          <textarea id="memoInput" name="memo" placeholder="その時の状況、きっかけ、効き方など"></textarea>
+        </div>
+
+        <div class="actions">
+          <button class="button" id="saveButton" type="submit">記録する</button>
+          <button class="button secondary" id="cancelEditButton" type="button" hidden>編集をやめる</button>
+        </div>
+        <p class="message" id="message" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section class="card backup-card" aria-labelledby="backup-title">
+      <h2 id="backup-title">バックアップ</h2>
+      <p>記録を保存したり復元できます。<br>大切な記録がなくならないように、定期的に保存をお願いします。</p>
+      <div class="backup-actions">
+        <button class="button secondary" id="exportButton" type="button">保存</button>
+        <label class="button secondary file-label">
+          復元
+          <input id="importInput" type="file" accept="application/json,.json">
+        </label>
+      </div>
+    </section>
+
+    <div class="section-title">
+      <h2>記録一覧</h2>
     </div>
+    <section id="recordsContainer" aria-live="polite"></section>
   </main>
 
   <script>
-    const STORAGE_KEY = "bureta_toki_ni_modoru_memo_v1";
+    const STORAGE_KEY = "prnDoseCountMemo_v1";
+    const SITUATIONS = [
+      "不安が強い",
+      "眠れない",
+      "動悸",
+      "涙が止まらない",
+      "外出前",
+      "人と話した後",
+      "仕事・職場のこと",
+      "家族のこと",
+      "その他"
+    ];
+    const FEELINGS = [
+      "こわい",
+      "つらい",
+      "苦しい",
+      "イライラ",
+      "悲しい",
+      "落ち着かない",
+      "頭が止まらない",
+      "消えたい",
+      "その他"
+    ];
+
+    const dateInput = document.getElementById("dateInput");
+    const timeInput = document.getElementById("timeInput");
+    const dosageCountSelect = document.getElementById("dosageCountSelect");
+    const medicineInput = document.getElementById("medicineInput");
     const memoInput = document.getElementById("memoInput");
+    const recordForm = document.getElementById("recordForm");
     const saveButton = document.getElementById("saveButton");
-    const status = document.getElementById("status");
-    const memoArea = document.getElementById("memoArea");
-    const backupSaveButton = document.getElementById("backupSaveButton");
-    const importFile = document.getElementById("importFile");
-    let statusTimer = null;
+    const cancelEditButton = document.getElementById("cancelEditButton");
+    const message = document.getElementById("message");
+    const recordsContainer = document.getElementById("recordsContainer");
+    const exportButton = document.getElementById("exportButton");
+    const importInput = document.getElementById("importInput");
 
-    function loadMemos() {
+    let appData = loadData();
+    let editingId = null;
+    let messageTimer = null;
+
+    function padNumber(value) {
+      return String(value).padStart(2, "0");
+    }
+
+    function todayString() {
+      const now = new Date();
+      return `${now.getFullYear()}-${padNumber(now.getMonth() + 1)}-${padNumber(now.getDate())}`;
+    }
+
+    function currentTimeString() {
+      const now = new Date();
+      return `${padNumber(now.getHours())}:${padNumber(now.getMinutes())}`;
+    }
+
+    function createId() {
+      if (window.crypto && typeof window.crypto.randomUUID === "function") {
+        return window.crypto.randomUUID();
+      }
+      return `record-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    }
+
+    function normalizeRecord(record) {
+      return {
+        id: typeof record.id === "string" && record.id ? record.id : createId(),
+        date: typeof record.date === "string" ? record.date : "",
+        time: typeof record.time === "string" ? record.time : "",
+        dosageCount: typeof record.dosageCount === "string" ? record.dosageCount : "",
+        medicine: typeof record.medicine === "string" ? record.medicine : "",
+        situations: Array.isArray(record.situations) ? record.situations.filter(Boolean) : [],
+        feelings: Array.isArray(record.feelings) ? record.feelings.filter(Boolean) : [],
+        memo: typeof record.memo === "string" ? record.memo : "",
+        createdAt: typeof record.createdAt === "string" ? record.createdAt : new Date().toISOString(),
+        updatedAt: typeof record.updatedAt === "string" ? record.updatedAt : ""
+      };
+    }
+
+    function normalizeData(raw) {
+      if (Array.isArray(raw)) {
+        return { version: 1, records: raw.map(normalizeRecord) };
+      }
+      if (raw && typeof raw === "object") {
+        return {
+          version: 1,
+          records: Array.isArray(raw.records) ? raw.records.map(normalizeRecord) : []
+        };
+      }
+      return { version: 1, records: [] };
+    }
+
+    function loadData() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) {
-          return [];
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (!saved) {
+          return { version: 1, records: [] };
         }
-        const parsed = JSON.parse(raw);
-        if (!Array.isArray(parsed)) {
-          return [];
-        }
-        return parsed.filter((memo) => typeof memo === "string");
+        return normalizeData(JSON.parse(saved));
       } catch (error) {
-        return [];
+        console.warn("保存データを読み込めませんでした", error);
+        return { version: 1, records: [] };
       }
     }
 
-    function saveMemos(memos) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(memos));
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizeData(appData)));
     }
 
-    function normalizeMemo(text) {
-      const trimmed = text.trim();
-      if (!trimmed) {
-        return "";
-      }
-      return trimmed.startsWith("・") ? trimmed : "・" + trimmed;
+    function makeChip(label, groupName) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "chip";
+      button.textContent = label;
+      button.dataset.value = label;
+      button.dataset.group = groupName;
+      button.setAttribute("aria-pressed", "false");
+      button.addEventListener("click", () => {
+        const isPressed = button.getAttribute("aria-pressed") === "true";
+        button.setAttribute("aria-pressed", String(!isPressed));
+      });
+      return button;
     }
 
-    function showStatus(message) {
-      status.textContent = message;
-      window.clearTimeout(statusTimer);
-      statusTimer = window.setTimeout(() => {
-        status.textContent = "";
-      }, 1800);
+    function renderChipControls() {
+      const situationChips = document.getElementById("situationChips");
+      const feelingChips = document.getElementById("feelingChips");
+      situationChips.innerHTML = "";
+      feelingChips.innerHTML = "";
+      SITUATIONS.forEach((label) => situationChips.appendChild(makeChip(label, "situations")));
+      FEELINGS.forEach((label) => feelingChips.appendChild(makeChip(label, "feelings")));
     }
 
-    function closeAllRows() {
-      document.querySelectorAll(".memo-row.is-open").forEach((row) => {
-        row.classList.remove("is-open");
+    function getSelectedChips(groupName) {
+      return Array.from(document.querySelectorAll(`.chip[data-group="${groupName}"][aria-pressed="true"]`))
+        .map((button) => button.dataset.value);
+    }
+
+    function setSelectedChips(groupName, values) {
+      const selected = new Set(values || []);
+      document.querySelectorAll(`.chip[data-group="${groupName}"]`).forEach((button) => {
+        button.setAttribute("aria-pressed", String(selected.has(button.dataset.value)));
       });
     }
 
-    function renderMemos() {
-      const memos = loadMemos();
-      memoArea.textContent = "";
+    function resetForm() {
+      editingId = null;
+      dateInput.value = todayString();
+      timeInput.value = currentTimeString();
+      dosageCountSelect.value = "";
+      medicineInput.value = "";
+      memoInput.value = "";
+      setSelectedChips("situations", []);
+      setSelectedChips("feelings", []);
+      saveButton.textContent = "記録する";
+      cancelEditButton.hidden = true;
+    }
 
-      if (memos.length === 0) {
+    function showMessage(text) {
+      message.textContent = text;
+      clearTimeout(messageTimer);
+      messageTimer = setTimeout(() => {
+        message.textContent = "";
+      }, 2600);
+    }
+
+    function formatDate(dateText) {
+      const parts = dateText.split("-");
+      if (parts.length !== 3) {
+        return dateText;
+      }
+      return `${parts[0]}/${parts[1]}/${parts[2]}`;
+    }
+
+    function sortRecords(records) {
+      return [...records].sort((a, b) => {
+        const dateCompare = b.date.localeCompare(a.date);
+        if (dateCompare !== 0) {
+          return dateCompare;
+        }
+        const timeCompare = b.time.localeCompare(a.time);
+        if (timeCompare !== 0) {
+          return timeCompare;
+        }
+        return b.createdAt.localeCompare(a.createdAt);
+      });
+    }
+
+    function groupRecordsByDate(records) {
+      return sortRecords(records).reduce((groups, record) => {
+        if (!groups[record.date]) {
+          groups[record.date] = [];
+        }
+        groups[record.date].push(record);
+        return groups;
+      }, {});
+    }
+
+    function recordSummary(record) {
+      const merged = [...record.situations, ...record.feelings];
+      return merged.length ? merged.join("／") : "記録のみ";
+    }
+
+    function renderRecords() {
+      recordsContainer.innerHTML = "";
+      const records = sortRecords(appData.records);
+      if (records.length === 0) {
         const empty = document.createElement("p");
         empty.className = "empty";
-        empty.textContent = "まだメモはありません。";
-        memoArea.appendChild(empty);
+        empty.textContent = "まだ記録はありません。必要になった時のことを、少しずつ残せます。";
+        recordsContainer.appendChild(empty);
         return;
       }
 
-      const list = document.createElement("ul");
-      list.className = "memo-list";
+      const grouped = groupRecordsByDate(records);
+      Object.keys(grouped).sort((a, b) => b.localeCompare(a)).forEach((date) => {
+        const card = document.createElement("article");
+        card.className = "card record-day";
 
-      memos.forEach((memo, index) => {
-        const row = document.createElement("li");
-        row.className = "memo-row";
+        const head = document.createElement("div");
+        head.className = "day-head";
+        head.innerHTML = `
+          <div class="day-date">${formatDate(date)}</div>
+          <div class="day-count">記録 ${grouped[date].length}件</div>
+        `;
+        card.appendChild(head);
 
-        const deleteButton = document.createElement("button");
-        deleteButton.className = "delete-button";
-        deleteButton.type = "button";
-        deleteButton.textContent = "削除";
-        deleteButton.addEventListener("click", () => deleteMemo(index));
+        const list = document.createElement("div");
+        list.className = "record-list";
 
-        const card = document.createElement("div");
-        card.className = "memo-card";
-        card.textContent = memo;
+        grouped[date].forEach((record) => {
+          const item = document.createElement("div");
+          item.className = "record-item";
 
-        addSwipeBehavior(row, card);
-        row.appendChild(deleteButton);
-        row.appendChild(card);
-        list.appendChild(row);
-      });
+          const main = document.createElement("div");
+          main.className = "record-main";
 
-      memoArea.appendChild(list);
-    }
+          const time = document.createElement("div");
+          time.className = "record-time";
+          time.textContent = record.time;
 
-    function addSwipeBehavior(row, card) {
-      let startX = 0;
-      let startY = 0;
-      let currentX = 0;
-      let dragging = false;
-      let suppressClick = false;
+          const detail = document.createElement("div");
+          detail.className = "record-detail";
 
-      card.addEventListener("pointerdown", (event) => {
-        startX = event.clientX;
-        startY = event.clientY;
-        currentX = 0;
-        dragging = true;
-      });
+          const summary = document.createElement("div");
+          summary.className = "record-summary";
+          summary.textContent = recordSummary(record);
+          detail.appendChild(summary);
 
-      card.addEventListener("pointermove", (event) => {
-        if (!dragging) {
-          return;
-        }
+          const doseMedParts = [];
+          if (record.dosageCount.trim()) {
+            doseMedParts.push(record.dosageCount.trim());
+          }
+          if (record.medicine.trim()) {
+            doseMedParts.push(record.medicine.trim());
+          }
+          if (doseMedParts.length) {
+            const doseMed = document.createElement("div");
+            doseMed.className = "record-dose-med";
+            doseMed.textContent = doseMedParts.join("　");
+            detail.appendChild(doseMed);
+          }
 
-        const diffX = event.clientX - startX;
-        const diffY = event.clientY - startY;
+          if (record.memo.trim()) {
+            const note = document.createElement("div");
+            note.className = "record-note";
+            note.textContent = record.memo.trim();
+            detail.appendChild(note);
+          }
 
-        if (Math.abs(diffY) > Math.abs(diffX) && Math.abs(diffY) > 12) {
-          dragging = false;
-          card.style.transform = "";
-          return;
-        }
+          main.appendChild(time);
+          main.appendChild(detail);
+          item.appendChild(main);
 
-        if (diffX < 0) {
-          currentX = Math.max(diffX, -92);
-          card.style.transform = "translateX(" + currentX + "px)";
-        }
-      });
+          const actions = document.createElement("div");
+          actions.className = "record-actions";
 
-      card.addEventListener("pointerup", () => {
-        if (!dragging) {
-          return;
-        }
-        dragging = false;
-        card.style.transform = "";
-        if (currentX < -42) {
-          closeAllRows();
-          row.classList.add("is-open");
-          suppressClick = true;
-        } else {
-          row.classList.remove("is-open");
-        }
-      });
+          const editButton = document.createElement("button");
+          editButton.type = "button";
+          editButton.className = "small-button";
+          editButton.textContent = "編集";
+          editButton.addEventListener("click", () => startEdit(record.id));
 
-      card.addEventListener("pointercancel", () => {
-        dragging = false;
-        card.style.transform = "";
-      });
+          const deleteButton = document.createElement("button");
+          deleteButton.type = "button";
+          deleteButton.className = "small-button";
+          deleteButton.textContent = "削除";
+          deleteButton.addEventListener("click", () => deleteRecord(record.id));
 
-      card.addEventListener("click", () => {
-        if (suppressClick) {
-          suppressClick = false;
-          return;
-        }
-        if (row.classList.contains("is-open")) {
-          row.classList.remove("is-open");
-        }
+          actions.appendChild(editButton);
+          actions.appendChild(deleteButton);
+          item.appendChild(actions);
+          list.appendChild(item);
+        });
+
+        card.appendChild(list);
+        recordsContainer.appendChild(card);
       });
     }
 
-    function addMemo() {
-      const memo = normalizeMemo(memoInput.value);
-      if (!memo) {
+    function render() {
+      renderRecords();
+    }
+
+    function startEdit(id) {
+      const record = appData.records.find((item) => item.id === id);
+      if (!record) {
+        return;
+      }
+      editingId = id;
+      dateInput.value = record.date;
+      timeInput.value = record.time;
+      dosageCountSelect.value = record.dosageCount || "";
+      medicineInput.value = record.medicine;
+      memoInput.value = record.memo;
+      setSelectedChips("situations", record.situations);
+      setSelectedChips("feelings", record.feelings);
+      saveButton.textContent = "更新する";
+      cancelEditButton.hidden = false;
+      message.textContent = "";
+      document.getElementById("form-title").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function deleteRecord(id) {
+      if (!confirm("この記録を削除しますか？")) {
+        return;
+      }
+      appData.records = appData.records.filter((record) => record.id !== id);
+      if (editingId === id) {
+        resetForm();
+      }
+      saveData();
+      render();
+    }
+
+    recordForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const date = dateInput.value;
+      const time = timeInput.value;
+      if (!date || !time) {
+        showMessage("日付と時間を入力してください");
         return;
       }
 
-      const memos = loadMemos();
-      memos.unshift(memo);
-      saveMemos(memos);
-      memoInput.value = "";
-      renderMemos();
-      showStatus("保存しました");
-    }
-
-    function deleteMemo(index) {
-      if (!window.confirm("このメモを削除しますか？")) {
-        closeAllRows();
-        return;
-      }
-
-      const memos = loadMemos();
-      memos.splice(index, 1);
-      saveMemos(memos);
-      renderMemos();
-    }
-
-    function saveBackup() {
-      const data = {
-        app: "ぶれた時に戻るメモ",
-        storageKey: STORAGE_KEY,
-        version: 1,
-        exportedAt: new Date().toISOString(),
-        memos: loadMemos()
+      const nowIso = new Date().toISOString();
+      const record = {
+        id: editingId || createId(),
+        date,
+        time,
+        dosageCount: dosageCountSelect.value,
+        medicine: medicineInput.value.trim(),
+        situations: getSelectedChips("situations"),
+        feelings: getSelectedChips("feelings"),
+        memo: memoInput.value.trim(),
+        createdAt: nowIso,
+        updatedAt: editingId ? nowIso : ""
       };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+
+      if (editingId) {
+        appData.records = appData.records.map((item) => {
+          if (item.id !== editingId) {
+            return item;
+          }
+          return { ...record, createdAt: item.createdAt || nowIso };
+        });
+      } else {
+        appData.records.push(record);
+      }
+
+      saveData();
+      resetForm();
+      render();
+      showMessage("記録しました");
+    });
+
+    cancelEditButton.addEventListener("click", () => {
+      resetForm();
+      message.textContent = "";
+    });
+
+    exportButton.addEventListener("click", () => {
+      const backup = {
+        app: "頓服メモ",
+        storageKey: STORAGE_KEY,
+        exportedAt: new Date().toISOString(),
+        data: normalizeData(appData)
+      };
+      const blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      const date = new Date().toISOString().slice(0, 10);
       link.href = url;
-      link.download = "modoru-memo-backup-" + date + ".json";
+      link.download = `prn-dose-count-memo-${todayString()}.json`;
       document.body.appendChild(link);
       link.click();
       link.remove();
       URL.revokeObjectURL(url);
-      showStatus("データを保存しました");
-    }
-
-    function restoreBackup(file) {
-      const reader = new FileReader();
-      reader.addEventListener("load", () => {
-        try {
-          const parsed = JSON.parse(String(reader.result));
-          const memos = Array.isArray(parsed) ? parsed : parsed.memos;
-
-          if (!Array.isArray(memos) || !memos.every((memo) => typeof memo === "string")) {
-            window.alert("復元できるファイルではありません。");
-            return;
-          }
-
-          if (!window.confirm("復元しますか？今のメモは、選んだファイルの内容に置き換わります。")) {
-            return;
-          }
-
-          saveMemos(memos);
-          renderMemos();
-          showStatus("データを復元しました");
-        } catch (error) {
-          window.alert("復元できませんでした。");
-        } finally {
-          importFile.value = "";
-        }
-      });
-      reader.readAsText(file);
-    }
-
-    saveButton.addEventListener("click", addMemo);
-    backupSaveButton.addEventListener("click", saveBackup);
-    importFile.addEventListener("change", () => {
-      const file = importFile.files && importFile.files[0];
-      if (file) {
-        restoreBackup(file);
-      }
     });
 
-    document.addEventListener("click", (event) => {
-      if (!event.target.closest(".memo-row")) {
-        closeAllRows();
+    importInput.addEventListener("change", async (event) => {
+      const file = event.target.files && event.target.files[0];
+      if (!file) {
+        return;
+      }
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        const imported = parsed && parsed.data ? parsed.data : parsed;
+        const normalized = normalizeData(imported);
+        if (!confirm("現在の記録を保存した内容で復元しますか？")) {
+          importInput.value = "";
+          return;
+        }
+        appData = normalized;
+        saveData();
+        resetForm();
+        render();
+        showMessage("復元しました");
+      } catch (error) {
+        console.warn("復元できませんでした", error);
+        showMessage("復元できませんでした");
+      } finally {
+        importInput.value = "";
       }
     });
 
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
-        navigator.serviceWorker.register("./sw.js").catch(() => {});
+        navigator.serviceWorker.register("./sw.js").catch((error) => {
+          console.warn("Service Worker registration failed", error);
+        });
       });
     }
 
-    renderMemos();
+    renderChipControls();
+    resetForm();
+    render();
   </script>
 </body>
 </html>
