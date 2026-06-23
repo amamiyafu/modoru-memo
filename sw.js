@@ -1,4 +1,4 @@
-﻿const CACHE_NAME = "modoru-memo-app-cache-v10";
+﻿const CACHE_NAME = "modoru-memo-app-cache-v11";
 const CACHE_FILES = [
   "./",
   "./index.html",
